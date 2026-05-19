@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>資産運用シミュレーション</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <div class="container">
+        <!-- サマリーバー -->
+        <div id="summary-bar" class="summary-bar">
+            <span class="summary-item">金融資産額 : <span id="summary-asset">1.3</span>億円</span><span class="summary-separator"> / </span>
+            <span class="summary-item">利回り : <span id="summary-yield" class="highlight">0.0</span>%</span><span class="summary-separator"> / </span>
+            <span class="summary-item">毎月取り崩し額 : <span id="summary-withdrawal" class="highlight">0</span>万円</span><span class="summary-separator"> / </span>
+            <span class="summary-item">取り崩し期間 : <span id="summary-period" class="highlight">0.0</span>年</span>
+        </div>
+
+        <div class="inputs-section">
+            <div class="input-column">
+                <div class="input-group">
+                    <div class="input-header">
+                        <label for="asset-slider">金融資産額</label>
+                        <div class="input-with-unit">
+                            <input type="number" id="asset-input" min="1.0" max="2.0" step="0.1">
+                            <span>億円</span>
+                        </div>
+                    </div>
+                    <input type="range" id="asset-slider" min="1.0" max="2.0" step="0.1" value="1.3">
+                    <div class="slider-labels">
+                        <span>1.0億円</span>
+                        <span>2.0億円</span>
+                    </div>
+                </div>
+
+                <div class="input-group">
+                    <div class="input-header">
+                        <label for="period-slider">取り崩し期間</label>
+                        <div class="input-with-unit">
+                            <input type="number" id="period-input" min="35" max="55" step="1">
+                            <span id="period-unit-span">年</span>
+                        </div>
+                    </div>
+                    <input type="range" id="period-slider" min="35" max="55" step="1" value="36">
+                    <div class="slider-labels">
+                        <span>35年(79歳)</span>
+                        <span>55年(99歳)</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="input-column">
+                <div class="input-group">
+                    <div class="input-header">
+                        <label for="withdrawal-slider">毎月の取り崩し額</label>
+                        <div class="input-with-unit">
+                            <input type="number" id="withdrawal-input" min="40" max="130" step="1">
+                            <span>万円</span>
+                        </div>
+                    </div>
+                    <input type="range" id="withdrawal-slider" min="40" max="130" step="1" value="60">
+                    <div class="slider-labels">
+                        <span>40万円</span>
+                        <span>130万円</span>
+                    </div>
+                </div>
+
+                <div class="input-group">
+                    <div class="input-header">
+                        <label for="yield-slider">利回り（年率）</label>
+                        <div class="input-with-unit">
+                            <input type="number" id="yield-input" min="3.0" max="12.0" step="0.1">
+                            <span>%</span>
+                        </div>
+                    </div>
+                    <input type="range" id="yield-slider" min="3.0" max="12.0" step="0.1" value="5.0">
+                    <div class="slider-labels">
+                        <span>3%</span>
+                        <span>12%</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="results-section">
+            <div class="result-card" id="result-yield-card">
+                <div class="result-header">
+                    <h2>利回り計算 <span class="header-result" id="header-result-yield"></span></h2>
+                </div>
+                <div class="chart-container">
+                    <canvas id="chart-yield"></canvas>
+                </div>
+            </div>
+
+            <div class="result-card" id="result-withdrawal-card">
+                <div class="result-header">
+                    <h2>毎月取り崩し額 <span class="header-result" id="header-result-withdrawal"></span></h2>
+                </div>
+                <div class="chart-container">
+                    <canvas id="chart-withdrawal"></canvas>
+                </div>
+            </div>
+
+            <div class="result-card" id="result-period-card">
+                <div class="result-header">
+                    <h2>取り崩し期間 <span class="header-result" id="header-result-period"></span></h2>
+                </div>
+                <div class="chart-container">
+                    <canvas id="chart-period"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>
