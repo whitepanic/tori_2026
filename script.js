@@ -288,7 +288,7 @@ document.addEventListener('DOMContentLoaded', () => {
         options.plugins.tooltip.callbacks = commonChartOptions.plugins.tooltip.callbacks;
         options.scales.y.ticks.callback = commonChartOptions.scales.y.ticks.callback;
 
-        if (isYield) {
+        if (type === 'yield' || type === 'period') {
             options.plugins.legend.display = false;
         }
 
@@ -339,6 +339,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const reqYieldText = reqYield >= 100 ? '測定不能' : reqYield.toFixed(1);
         
         summary.yield.textContent = reqYieldText;
+        document.getElementById('subtitle-yield').textContent = `(${pmt.toLocaleString()}万円)`;
         headers.yield.innerHTML = `${reqYieldText}%`;
         
         const chartDataYieldYears = reqYield >= 100 ? 10 : periodYears;
@@ -353,6 +354,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const calcPmtP3 = Math.floor(calculateMonthlyWithdrawal(pv, baseRate + 3, periodMonths, usePension, pensionAmt));
 
         summary.withdrawal.textContent = calcPmt.toLocaleString();
+        document.getElementById('subtitle-withdrawal').textContent = `(${baseRate.toFixed(1)}%)`;
         headers.withdrawal.innerHTML = `${calcPmt.toLocaleString()}万円 <span class="header-result-extra">/ <span style="color:${colors.p1}">${formatRate(baseRate + 1)}: ${calcPmtP1.toLocaleString()}万円</span> / <span style="color:${colors.p2}">${formatRate(baseRate + 2)}: ${calcPmtP2.toLocaleString()}万円</span> / <span style="color:${colors.p3}">${formatRate(baseRate + 3)}: ${calcPmtP3.toLocaleString()}万円</span></span>`;
         
         const dsWithdrawalBase = generateChartDataset(pv, baseRate, calcPmt, periodYears, `基準 (${baseRate.toFixed(1)}%)`, colors.base, usePension, pensionAmt);
@@ -365,33 +367,20 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // 3. 取り崩し期間
         const calcPeriod = calculateWithdrawalPeriod(pv, baseRate, pmt, usePension, pensionAmt);
-        const calcPeriodP1 = calculateWithdrawalPeriod(pv, baseRate + 1, pmt, usePension, pensionAmt);
-        const calcPeriodP2 = calculateWithdrawalPeriod(pv, baseRate + 2, pmt, usePension, pensionAmt);
-        const calcPeriodP3 = calculateWithdrawalPeriod(pv, baseRate + 3, pmt, usePension, pensionAmt);
 
         const formatPeriod = (p) => p === -1 ? '∞' : p.toFixed(1) + `年 (${Math.floor(baseAge + p)}歳)`;
         
         summary.period.textContent = calcPeriod === -1 ? '∞' : calcPeriod.toFixed(1);
         
-        headers.period.innerHTML = `${formatPeriod(calcPeriod)} <span class="header-result-extra">/ <span style="color:${colors.p1}">${formatRate(baseRate + 1)}: ${formatPeriod(calcPeriodP1)}</span> / <span style="color:${colors.p2}">${formatRate(baseRate + 2)}: ${formatPeriod(calcPeriodP2)}</span> / <span style="color:${colors.p3}">${formatRate(baseRate + 3)}: ${formatPeriod(calcPeriodP3)}</span></span>`;
+        document.getElementById('subtitle-period').textContent = `(${pmt.toLocaleString()}万円 / ${baseRate.toFixed(1)}%)`;
+        headers.period.innerHTML = `${formatPeriod(calcPeriod)}`;
         
-        let chartMaxYears = 0;
-        const allPeriods = [calcPeriod, calcPeriodP1, calcPeriodP2, calcPeriodP3];
-        const validPeriods = allPeriods.filter(p => p !== -1);
-        if (validPeriods.length > 0) {
-            chartMaxYears = Math.ceil(Math.max(...validPeriods));
-        }
-        if (allPeriods.includes(-1)) {
-            chartMaxYears = Math.max(chartMaxYears, 50);
-        }
+        let chartMaxYears = calcPeriod === -1 ? 50 : Math.ceil(calcPeriod);
 
-        const dsPeriodBase = generateChartDataset(pv, baseRate, pmt, chartMaxYears, `基準 (${baseRate.toFixed(1)}%)`, colors.base, usePension, pensionAmt);
+        const dsPeriodBase = generateChartDataset(pv, baseRate, pmt, chartMaxYears, `資産残高`, colors.base, usePension, pensionAmt);
         dsPeriodBase.fill = true;
-        const dsPeriodPlus1 = generateChartDataset(pv, baseRate + 1, pmt, chartMaxYears, formatRate(baseRate + 1), colors.p1, usePension, pensionAmt);
-        const dsPeriodPlus2 = generateChartDataset(pv, baseRate + 2, pmt, chartMaxYears, formatRate(baseRate + 2), colors.p2, usePension, pensionAmt);
-        const dsPeriodPlus3 = generateChartDataset(pv, baseRate + 3, pmt, chartMaxYears, formatRate(baseRate + 3), colors.p3, usePension, pensionAmt);
 
-        updateChart('period', getLabels(chartMaxYears), [dsPeriodBase, dsPeriodPlus1, dsPeriodPlus2, dsPeriodPlus3], chartMaxYears);
+        updateChart('period', getLabels(chartMaxYears), [dsPeriodBase], chartMaxYears);
 
         saveSettings();
     };
