@@ -50,18 +50,7 @@
                     </div>
                 </div>
 
-                <div class="input-group">
-                    <div class="input-header">
-                        <label for="pension-check" style="display:flex; align-items:center; cursor:pointer;">
-                            <input type="checkbox" id="pension-check" checked style="margin-right:8px; width:16px; height:16px; cursor:pointer;">
-                            60歳(2042年)から年金
-                        </label>
-                        <div class="input-with-unit">
-                            <input type="number" id="pension-input" min="0" max="100" step="1" value="20">
-                            <span>万円</span>
-                        </div>
-                    </div>
-                </div>
+
             </div>
 
             <div class="input-column">
@@ -96,6 +85,19 @@
                         <span>12%</span>
                     </div>
                 </div>
+
+                <div class="input-group">
+                    <div class="input-header">
+                        <label for="pension-check" style="display:flex; align-items:center; cursor:pointer;">
+                            <input type="checkbox" id="pension-check" checked style="margin-right:8px; width:16px; height:16px; cursor:pointer;">
+                            60歳(2042年)から年金
+                        </label>
+                        <div class="input-with-unit">
+                            <input type="number" id="pension-input" min="0" max="100" step="1" value="20">
+                            <span>万円</span>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
 
@@ -128,6 +130,9 @@
             </div>
         </div>
     </div>
-    <script src="script.js"></script>
+    <script>
+        // 캐시 방지 및 DOMContentLoaded 정상 동작을 위해 document.write로 동기적 로드
+        document.write('<script src="script.js?v=' + new Date().getTime() + '"><\/script>');
+    </script>
 </body>
 </html>
