@@ -47,20 +47,55 @@ body {
     color: #ffffff;
     padding: 15px 20px;
     border-radius: var(--radius-md);
-    text-align: center;
-    font-size: 1.1rem;
-    font-weight: 700;
-    margin-bottom: 30px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 1rem;
+    font-weight: 500;
+    margin-bottom: 2px;
     box-shadow: var(--shadow-sm);
+}
+
+.summary-bar>div {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 10px;
 }
 
 .summary-bar span {
     color: #fff;
-    font-size: 1.3rem;
+    font-size: 1.0rem;
 }
 
 .summary-bar span.highlight {
-    color: #ffd700; /* 黄色 */
+    color: #ffd700;
+    /* 黄色 */
+}
+
+.toggle-btn {
+    display: block;
+    margin-left: auto;
+    margin-top: 0;
+    margin-bottom: 2px;
+    background-color: transparent;
+    color: #dc3545;
+    border: none;
+    padding: 4px 8px;
+    font-size: 0.85rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: var(--transition);
+    white-space: nowrap;
+}
+
+.toggle-btn:hover {
+    background-color: #fff5f5;
+    border-radius: 4px;
+}
+
+.hidden {
+    display: none !important;
 }
 
 /* 入力エリア (Inputs Section) */
@@ -115,7 +150,7 @@ body {
 .input-with-unit input {
     border: none;
     background: transparent;
-    font-size: 1.1rem;
+    font-size: 1rem;
     font-weight: 700;
     color: var(--primary-color);
     text-align: right;
@@ -126,11 +161,12 @@ body {
 
 input::-webkit-outer-spin-button,
 input::-webkit-inner-spin-button {
-  -webkit-appearance: none;
-  margin: 0;
+    -webkit-appearance: none;
+    margin: 0;
 }
+
 input[type=number] {
-  -moz-appearance: textfield;
+    -moz-appearance: textfield;
 }
 
 .input-with-unit span {
@@ -160,7 +196,7 @@ input[type="range"]::-webkit-slider-thumb {
     cursor: pointer;
     transition: var(--transition);
     border: 2px solid #fff;
-    box-shadow: 0 1px 4px rgba(0,0,0,0.2);
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.2);
 }
 
 input[type="range"]::-webkit-slider-thumb:hover {
@@ -196,7 +232,7 @@ input[type="range"]::-webkit-slider-thumb:hover {
 }
 
 .result-header h2 {
-    font-size: 1.1rem;
+    font-size: 1rem;
     color: var(--text-main);
     font-weight: 700;
 }
@@ -218,18 +254,20 @@ input[type="range"]::-webkit-slider-thumb:hover {
 .chart-container {
     position: relative;
     width: 100%;
-    height: 250px;
+    height: 350px; /* 500px의 70%로 축소 */
 }
 
 @media (max-width: 768px) {
     .inputs-section {
         flex-direction: column;
     }
+
     .summary-bar {
         font-size: 0.9rem;
     }
+
     .summary-bar span {
-        font-size: 1.1rem;
+        font-size: 1rem;
     }
 }
 
@@ -237,16 +275,20 @@ input[type="range"]::-webkit-slider-thumb:hover {
     .container {
         padding: 10px;
     }
+
     .result-card {
         padding: 25px 5px;
     }
+
     .summary-separator {
         display: none;
     }
+
     .summary-item {
         display: block;
         margin-bottom: 5px;
     }
+
     .summary-item:last-child {
         margin-bottom: 0;
     }

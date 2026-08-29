@@ -1,52 +1,73 @@
 <!DOCTYPE html>
 <html lang="ja">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>資産運用シミュレーション</title>
+    <title>資産運用シミュレーション v2</title>
     <link rel="stylesheet" href="style.css">
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet">
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
 </head>
+
 <body>
     <div class="container">
         <!-- サマリーバー -->
         <div id="summary-bar" class="summary-bar">
-            <span class="summary-item">金融資産額 : <span id="summary-asset">1.3</span>億円</span><span class="summary-separator"> / </span>
-            <span class="summary-item">利回り : <span id="summary-yield" class="highlight">0.0</span>%</span><span class="summary-separator"> / </span>
-            <span class="summary-item">毎月生活費 : <span id="summary-withdrawal" class="highlight">0</span>万円</span><span class="summary-separator"> / </span>
-            <span class="summary-item">期間 : <span id="summary-period" class="highlight">0.0</span>年</span>
-        </div>
+            <div>
+                <span class="summary-item">金融資産額 : <span id="summary-asset" class="highlight">1.5</span>億円</span><span
+                    class="summary-separator"> / </span>
+                <span class="summary-item">毎月生活費 : <span id="summary-withdrawal"
+                        class="highlight">0</span>万円</span><span class="summary-separator"> / </span>
+                <span class="summary-item">目標年齢 : <span id="summary-period" class="highlight">80</span>歳</span><span
+                    class="summary-separator"> / </span>
 
-        <div class="inputs-section">
+                <span class="summary-item">最終金額 : <span id="summary-final" class="highlight">10000</span>万円</span>
+
+            </div>
+
+        </div>
+        <button id="toggle-settings-btn" class="toggle-btn">設定変更</button>
+
+
+        <div id="settings-panel" class="inputs-section hidden">
             <div class="input-column">
                 <div class="input-group">
                     <div class="input-header">
                         <label for="asset-slider">金融資産額</label>
                         <div class="input-with-unit">
-                            <input type="number" id="asset-input" min="1.0" max="2.0" step="0.1">
+                            <input type="number" id="asset-input" min="1.5" max="5.0" step="0.1" value="1.5">
                             <span>億円</span>
                         </div>
                     </div>
-                    <input type="range" id="asset-slider" min="1.0" max="2.0" step="0.1" value="1.3">
+                    <input type="range" id="asset-slider" min="1.5" max="5.0" step="0.1" value="1.5">
                     <div class="slider-labels">
-                        <span>1.0億円</span>
-                        <span>2.0億円</span>
+                        <span>1.5億円</span>
+                        <span>5.0億円</span>
                     </div>
                 </div>
 
                 <div class="input-group">
                     <div class="input-header">
-                        <label for="period-slider">取り崩し期間</label>
+                        <label for="period-slider">目標年齢</label>
                         <div class="input-with-unit">
-                            <input type="number" id="period-input" min="35" max="45" step="1">
-                            <span id="period-unit-span">年</span>
+                            <input type="number" id="period-input" min="80" max="100" step="1" value="80">
+                            <span id="period-unit-span">歳</span>
                         </div>
                     </div>
-                    <input type="range" id="period-slider" min="35" max="45" step="1" value="36">
+                    <input type="range" id="period-slider" min="80" max="100" step="1" value="80">
                     <div class="slider-labels">
-                        <span>35年(79歳)</span>
-                        <span>45年(89歳)</span>
+                        <span>80歳</span>
+                        <span>100歳</span>
+                    </div>
+                </div>
+
+                <div class="input-group">
+                    <div class="input-header">
+                        <label for="birthdate-input">生年月日</label>
+                        <div class="input-with-unit" style="padding: 2px 10px;">
+                            <input type="date" id="birthdate-input" value="1982-07-28" style="width:120px;">
+                        </div>
                     </div>
                 </div>
 
@@ -56,26 +77,9 @@
             <div class="input-column">
                 <div class="input-group">
                     <div class="input-header">
-                        <label for="withdrawal-slider">毎月の生活費</label>
-                        <div class="input-with-unit">
-                            <input type="number" id="withdrawal-input" min="40" max="130" step="1">
-                            <span>万円</span>
-                        </div>
-                    </div>
-                    <input type="range" id="withdrawal-slider" min="40" max="130" step="1" value="71">
-                    <div class="slider-labels">
-                        <span>40万円</span>
-                        <span>130万円</span>
-                    </div>
-                </div>
-
-
-
-                <div class="input-group">
-                    <div class="input-header">
                         <label for="yield-slider">利回り（年率）</label>
                         <div class="input-with-unit">
-                            <input type="number" id="yield-input" min="3.0" max="12.0" step="0.1">
+                            <input type="number" id="yield-input" min="3.0" max="12.0" step="0.1" value="5.0">
                             <span>%</span>
                         </div>
                     </div>
@@ -88,51 +92,54 @@
 
                 <div class="input-group">
                     <div class="input-header">
-                        <label for="pension-check" style="display:flex; align-items:center; cursor:pointer;">
-                            <input type="checkbox" id="pension-check" checked style="margin-right:8px; width:16px; height:16px; cursor:pointer;">
-                            60歳(2042年)から年金
-                        </label>
+                        <label for="final-slider">最終残高</label>
                         <div class="input-with-unit">
-                            <input type="number" id="pension-input" min="0" max="100" step="1" value="20">
+                            <input type="number" id="final-input" min="1000" max="10000" step="1000" value="10000">
                             <span>万円</span>
                         </div>
+                    </div>
+                    <input type="range" id="final-slider" min="1000" max="10000" step="1000" value="10000">
+                    <div class="slider-labels">
+                        <span>1,000万円</span>
+                        <span>1億円</span>
+                    </div>
+                </div>
+
+
+
+                <div class="input-group">
+                    <div class="input-header">
+                        <label for="pension-slider">60歳年金開始額</label>
+                        <div class="input-with-unit">
+                            <input type="number" id="pension-input" min="20" max="40" step="1" value="20">
+                            <span>万円</span>
+                        </div>
+                    </div>
+                    <input type="range" id="pension-slider" min="20" max="40" step="1" value="20">
+                    <div class="slider-labels">
+                        <span>20万円</span>
+                        <span>40万円</span>
                     </div>
                 </div>
             </div>
         </div>
 
         <div class="results-section">
-            <div class="result-card" id="result-yield-card">
-                <div class="result-header">
-                    <h2>利回り計算 <span id="subtitle-yield" style="font-size: 0.8em; color: #555; font-weight: normal; margin-left: 8px;"></span><span class="header-result" id="header-result-yield"></span></h2>
-                </div>
-                <div class="chart-container">
-                    <canvas id="chart-yield"></canvas>
-                </div>
-            </div>
-
             <div class="result-card" id="result-withdrawal-card">
                 <div class="result-header">
-                    <h2>毎月生活費 <span id="subtitle-withdrawal" style="font-size: 0.8em; color: #555; font-weight: normal; margin-left: 8px;"></span><span class="header-result" id="header-result-withdrawal"></span></h2>
+                    <h2>
+                        毎月生活費 <span class="header-result" id="header-result-withdrawal"></span>
+                    </h2>
                 </div>
-                <div class="chart-container">
-                    <canvas id="chart-withdrawal"></canvas>
-                </div>
-            </div>
-
-            <div class="result-card" id="result-period-card">
-                <div class="result-header">
-                    <h2>期間 <span id="subtitle-period" style="font-size: 0.8em; color: #555; font-weight: normal; margin-left: 8px;"></span><span class="header-result" id="header-result-period"></span></h2>
-                </div>
-                <div class="chart-container">
-                    <canvas id="chart-period"></canvas>
+                <div class="chart-container" style="height: 350px;">
+                    <div id="chart-withdrawal"></div>
                 </div>
             </div>
         </div>
     </div>
     <script>
-        // 캐시 방지 및 DOMContentLoaded 정상 동작을 위해 document.write로 동기적 로드
         document.write('<script src="script.js?v=' + new Date().getTime() + '"><\/script>');
     </script>
 </body>
+
 </html>
