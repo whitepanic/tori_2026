@@ -1,4 +1,4 @@
-document.addEventListener('DOMContentLoaded', () => {
+const init = () => {
     const inputs = {
         assetNum: document.getElementById('asset-input'),
         assetRange: document.getElementById('asset-slider'),
@@ -45,21 +45,30 @@ document.addEventListener('DOMContentLoaded', () => {
         return age;
     };
 
-    const getCookie = (name) => {
-        const value = `; ${document.cookie}`;
-        const parts = value.split(`; ${name}=`);
-        if (parts.length === 2) return parts.pop().split(';').shift();
-        return null;
-    };
-    
-    const setCookie = (name, value) => {
-        document.cookie = `${name}=${value}; max-age=${60 * 60 * 24 * 365}; path=/`;
+    // LocalStorage 管理 (クッキーからの移行対応)
+    const storage = {
+        get: (key) => {
+            try {
+                const item = localStorage.getItem(key);
+                if (item !== null && item !== undefined && item !== '') return item;
+            } catch (e) {}
+            // クッキーフォールバック
+            const value = `; ${document.cookie}`;
+            const parts = value.split(`; ${key}=`);
+            if (parts.length === 2) return parts.pop().split(';').shift();
+            return null;
+        },
+        set: (key, value) => {
+            try {
+                localStorage.setItem(key, value);
+            } catch (e) {}
+        }
     };
 
     const loadSettings = () => {
         const load = (key, numEl, rangeEl) => {
-            const val = getCookie(key);
-            if (val) {
+            const val = storage.get(key);
+            if (val !== null && val !== undefined && val !== '') {
                 numEl.value = val;
                 rangeEl.value = val;
             } else {
@@ -72,17 +81,17 @@ document.addEventListener('DOMContentLoaded', () => {
         load('sim2_yield', inputs.yieldNum, inputs.yieldRange);
         load('sim2_pension', inputs.pensionNum, inputs.pensionRange);
 
-        const bd = getCookie('sim2_birthdate');
+        const bd = storage.get('sim2_birthdate');
         if (bd) inputs.birthdate.value = bd;
     };
 
     const saveSettings = () => {
-        setCookie('sim2_asset', inputs.assetNum.value);
-        setCookie('sim2_period', inputs.periodNum.value);
-        setCookie('sim2_final', inputs.finalNum.value);
-        setCookie('sim2_yield', inputs.yieldNum.value);
-        setCookie('sim2_pension', inputs.pensionNum.value);
-        setCookie('sim2_birthdate', inputs.birthdate.value);
+        storage.set('sim2_asset', inputs.assetNum.value);
+        storage.set('sim2_period', inputs.periodNum.value);
+        storage.set('sim2_final', inputs.finalNum.value);
+        storage.set('sim2_yield', inputs.yieldNum.value);
+        storage.set('sim2_pension', inputs.pensionNum.value);
+        storage.set('sim2_birthdate', inputs.birthdate.value);
     };
 
     // 年金現価係数 (Present Value Annuity Factor)
@@ -238,7 +247,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     height: '100%',
                     toolbar: { show: false },
                     animations: { enabled: false },
-                    zoom: { enabled: true, type: 'x' }
+                    zoom: { enabled: false }
                 },
                 annotations: annotationsConfig,
                 colors: [colors.base],
@@ -306,4 +315,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
     loadSettings();
     updateSimulation();
-});
+};
+
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', init);
+} else {
+    init();
+}

@@ -27,7 +27,7 @@
             </div>
 
         </div>
-        <button id="toggle-settings-btn" class="toggle-btn">設定変更</button>
+        <button type="button" id="toggle-settings-btn" class="toggle-btn">設定変更</button>
 
 
         <div id="settings-panel" class="inputs-section hidden">
@@ -138,7 +138,9 @@
         </div>
     </div>
     <script>
-        document.write('<script src="script.js?v=' + new Date().getTime() + '"><\/script>');
+        const s = document.createElement('script');
+        s.src = 'script.js?v=' + Date.now();
+        document.body.appendChild(s);
     </script>
 </body>
 
