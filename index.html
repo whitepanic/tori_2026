@@ -18,7 +18,7 @@
                 <span class="summary-item">金融資産額 : <span id="summary-asset" class="highlight">1.5</span>億円</span><span
                     class="summary-separator"> / </span>
                 <span class="summary-item">毎月生活費 : <span id="summary-withdrawal"
-                        class="highlight">0</span>万円</span><span class="summary-separator"> / </span>
+                        class="highlight">0万円 (0万円)</span></span><span class="summary-separator"> / </span>
                 <span class="summary-item">目標年齢 : <span id="summary-period" class="highlight">80</span>歳</span><span
                     class="summary-separator"> / </span>
 
@@ -59,6 +59,21 @@
                     <div class="slider-labels">
                         <span>80歳</span>
                         <span>100歳</span>
+                    </div>
+                </div>
+
+                <div class="input-group">
+                    <div class="input-header">
+                        <label for="nisa-slider">非課税(NISA)枠額</label>
+                        <div class="input-with-unit">
+                            <input type="number" id="nisa-input" min="3800" max="10000" step="100" value="3800">
+                            <span>万円</span>
+                        </div>
+                    </div>
+                    <input type="range" id="nisa-slider" min="3800" max="10000" step="100" value="3800">
+                    <div class="slider-labels">
+                        <span>3,800万円</span>
+                        <span>1億円</span>
                     </div>
                 </div>
 
@@ -136,6 +151,13 @@
                 </div>
             </div>
         </div>
+
+        <button type="button" id="toggle-log-btn" class="toggle-btn" style="color: #666; margin-top: 20px;">ログ表示</button>
+
+        <div id="log-panel" class="result-card hidden" style="margin-bottom: 20px; padding: 20px; font-family: monospace;">
+            <pre id="log-content" style="white-space: pre-wrap; font-size: 0.9em; line-height: 1.8; color: #333;"></pre>
+        </div>
+
     </div>
     <script>
         const s = document.createElement('script');
